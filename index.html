@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Reshipping - TikTok Shop Dropship Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7038937814350060"
+         crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(-45deg, #0a0a0a, #0d1b0d, #0a0a0a, #0e1a0e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #e5e5e5;
+            min-height: 100vh;
+            padding-top: 80px;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1a2e1a;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 20px rgba(127, 181, 127, 0.6);
+        }
+
+        .search-section {
+            flex-grow: 1;
+            max-width: 600px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            border: 1px solid #1a3d1a;
+            border-radius: 8px;
+            background: #0d1b0d;
+            color: #e5e5e5;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar::placeholder {
+            color: #4a6b4a;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #2d5a2d;
+            box-shadow: 0 0 0 3px rgba(45, 90, 45, 0.15);
+        }
+
+        .filter-button {
+            padding: 10px 20px;
+            border: 1px solid #1a3d1a;
+            background: #0d1b0d;
+            color: #9bc49b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .filter-button:hover {
+            background: #1a3d1a;
+            border-color: #2d5a2d;
+            box-shadow: 0 0 15px rgba(127, 181, 127, 0.3);
+        }
+
+        .filter-button.active {
+            background: #1a3d1a;
+            color: #c8e6c8;
+        }
+
+        .back-button {
+            padding: 8px 16px;
+            border: 1px solid #1a3d1a;
+            background: transparent;
+            color: #9bc49b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button.visible {
+            display: flex;
+        }
+
+        .back-button:hover {
+            background: #0d1b0d;
+            border-color: #2d5a2d;
+            transform: translateX(-3px);
+        }
+
+        .filter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-modal.active {
+            display: flex;
+        }
+
+        .filter-panel {
+            background: #0d1b0d;
+            border: 1px solid #1a3d1a;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #6b8e6b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: #1a3d1a;
+            color: #c8e6c8;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #9bc49b;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-chip {
+            padding: 8px 16px;
+            border: 1px solid #1a3d1a;
+            background: transparent;
+            color: #6b8e6b;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-chip:hover {
+            background: #0d1b0d;
+            border-color: #2d5a2d;
+        }
+
+        .category-chip.active {
+            background: #1a3d1a;
+            color: #c8e6c8;
+            border-color: #2d5a2d;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #1a3d1a;
+            border-radius: 6px;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            font-size: 0.9rem;
+        }
+
+        .price-input:focus {
+            outline: none;
+            border-color: #2d5a2d;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #1a3d1a;
+        }
+
+        .apply-button, .clear-button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .apply-button {
+            background: #1a3d1a;
+            border: 1px solid #2d5a2d;
+            color: #c8e6c8;
+        }
+
+        .apply-button:hover {
+            background: #2d5a2d;
+            box-shadow: 0 0 20px rgba(127, 181, 127, 0.4);
+        }
+
+        .clear-button {
+            background: transparent;
+            border: 1px solid #1a3d1a;
+            color: #6b8e6b;
+        }
+
+        .clear-button:hover {
+            background: #0d1b0d;
+            border-color: #2d5a2d;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .ad-container {
+            margin: 20px auto;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(13, 27, 13, 0.3);
+            border: 1px solid #1a3d1a;
+            border-radius: 6px;
+        }
+
+        .banner-section {
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .banner-card {
+            background: linear-gradient(135deg, #1a3d1a 0%, #0d1b0d 100%);
+            border: 1px solid #2d5a2d;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .banner-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(127, 181, 127, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .banner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(127, 181, 127, 0.3);
+            border-color: #7fb57f;
+        }
+
+        .banner-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(127, 181, 127, 0.5));
+        }
+
+        .banner-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #c8e6c8;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(127, 181, 127, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-subtitle {
+            font-size: 0.9rem;
+            color: #9bc49b;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #7fb57f;
+            color: #0a0a0a;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 15px rgba(127, 181, 127, 0.6);
+            z-index: 1;
+        }
+
+        .section-header {
+            margin: 40px 0 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1a3d1a;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(127, 181, 127, 0.4);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 30px 0;
+        }
+
+        .product-card {
+            background: #0d1b0d;
+            border: 1px solid #1a3d1a;
+            border-radius: 12px;
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 20, 0, 0.4),
+                        0 0 20px rgba(127, 181, 127, 0.2);
+            border-color: #2d5a2d;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            background: #0a0a0a;
+            margin-bottom: 0;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.03);
+        }
+
+        .product-info {
+            padding: 16px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #e5e5e5;
+            line-height: 1.4;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: auto;
+            padding-top: 12px;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .product-card:hover .product-price {
+            color: #7fb57f;
+        }
+
+        .product-markup {
+            color: #7fb57f;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .product-details {
+            font-size: 0.85rem;
+            color: #4a6b4a;
+            margin-bottom: 4px;
+        }
+
+        .product-details strong {
+            color: #6b8e6b;
+        }
+
+        .category-badge {
+            display: inline-block;
+            color: #9bc49b;
+            padding: 4px 10px;
+            border: 1px solid #1a3d1a;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+        }
+
+        .stats {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid #1a2e1a;
+            margin-top: 40px;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(127, 181, 127, 0.5);
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            color: #6b8e6b;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #6b8e6b;
+            font-size: 0.95rem;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .top-bar-content {
+                flex-wrap: wrap;
+            }
+            
+            .search-section {
+                order: 3;
+                flex-basis: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="logo-section">
+                <button class="back-button" id="backButton">
+                    ← Back
+                </button>
+                <img src="favicon.png" alt="Reshipping" class="logo-icon">
+                <div class="logo-text">Reshipping</div>
+            </div>
+            <div class="search-section">
+                <input type="text" class="search-bar" id="searchBar" placeholder="Search products...">
+            </div>
+            <button class="filter-button" id="filterButton">
+                <span>⚙</span> Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="filter-modal" id="filterModal">
+        <div class="filter-panel">
+            <div class="filter-header">
+                <h2 class="filter-title">Filters</h2>
+                <button class="close-button" id="closeFilter">×</button>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-title">Category</div>
+                <div class="category-options">
+                    <button class="category-chip active" data-category="all">All</button>
+                    <button class="category-chip" data-category="beauty">Beauty</button>
+                    <button class="category-chip" data-category="electronics">Electronics</button>
+                    <button class="category-chip" data-category="fashion">Fashion</button>
+                    <button class="category-chip" data-category="clothing">Clothing</button>
+                    <button class="category-chip" data-category="home">Home</button>
+                    <button class="category-chip" data-category="fitness">Fitness</button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-section-title">Cost Range</div>
+                <div class="price-inputs">
+                    <input type="number" class="price-input" id="minPrice" placeholder="Min $">
+                    <span style="color: #6b8e6b;">—</span>
+                    <input type="number" class="price-input" id="maxPrice" placeholder="Max $">
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="clear-button" id="clearFilters">Clear All</button>
+                <button class="apply-button" id="applyFilters">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Top Banner Ad -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7038937814350060"
+                 data-ad-slot="6082797156"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <!-- Banner Section -->
+        <div class="banner-section">
+            <div class="banner-card" onclick="document.getElementById('filterButton').click()">
+                <span class="badge">Hot</span>
+                <div class="banner-icon">✨</div>
+                <h2 class="banner-title">New Arrivals</h2>
+                <p class="banner-subtitle">Fresh products added daily</p>
+            </div>
+            <div class="banner-card" onclick="document.getElementById('filterButton').click()">
+                <span class="badge">Live</span>
+                <div class="banner-icon">📦</div>
+                <h2 class="banner-title">Reshipped Products</h2>
+                <p class="banner-subtitle">Verified dropshipping opportunities</p>
+            </div>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2 class="section-title">All Products</h2>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+
+        <!-- Bottom Ad -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7038937814350060"
+                 data-ad-slot="2434717250"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="stats">
+            <div class="stats-number" id="totalProducts">0</div>
+            <div class="stats-label">Products tracked</div>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let minPrice = null;
+        let maxPrice = null;
+
+        // Modal Controls
+        const filterButton = document.getElementById('filterButton');
+        const filterModal = document.getElementById('filterModal');
+        const closeFilter = document.getElementById('closeFilter');
+        const applyFilters = document.getElementById('applyFilters');
+        const clearFilters = document.getElementById('clearFilters');
+        const backButton = document.getElementById('backButton');
+
+        // Update back button visibility
+        function updateBackButton() {
+            const hasFilters = currentFilter !== 'all' || searchTerm !== '' || minPrice !== null || maxPrice !== null;
+            if (hasFilters) {
+                backButton.classList.add('visible');
+            } else {
+                backButton.classList.remove('visible');
+            }
+        }
+
+        // Back button functionality
+        backButton.addEventListener('click', () => {
+            currentFilter = 'all';
+            minPrice = null;
+            maxPrice = null;
+            searchTerm = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('searchBar').value = '';
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            document.querySelector('.category-chip[data-category="all"]').classList.add('active');
+            filterButton.classList.remove('active');
+            updateBackButton();
+            renderProducts();
+        });
+
+        filterButton.addEventListener('click', () => {
+            filterModal.classList.add('active');
+        });
+
+        closeFilter.addEventListener('click', () => {
+            filterModal.classList.remove('active');
+        });
+
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) {
+                filterModal.classList.remove('active');
+            }
+        });
+
+        // Category Selection
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                currentFilter = chip.dataset.category;
+            });
+        });
+
+        // Apply Filters
+        applyFilters.addEventListener('click', () => {
+            minPrice = document.getElementById('minPrice').value ? parseFloat(document.getElementById('minPrice').value) : null;
+            maxPrice = document.getElementById('maxPrice').value ? parseFloat(document.getElementById('maxPrice').value) : null;
+            filterModal.classList.remove('active');
+            filterButton.classList.add('active');
+            updateBackButton();
+            renderProducts();
+        });
+
+        // Clear Filters
+        clearFilters.addEventListener('click', () => {
+            currentFilter = 'all';
+            minPrice = null;
+            maxPrice = null;
+            searchTerm = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('searchBar').value = '';
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            document.querySelector('.category-chip[data-category="all"]').classList.add('active');
+            filterButton.classList.remove('active');
+            updateBackButton();
+            renderProducts();
+        });
+
+        // Search
+        document.getElementById('searchBar').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            updateBackButton();
+            renderProducts();
+        });
+
+        // Load Products
+        async function loadProducts() {
+            const productFiles = [
+                '1.txt','2.txt','3.txt','4.txt','5.txt','6.txt','7.txt','8.txt','9.txt','10.txt',
+                '11.txt','12.txt','13.txt','14.txt','15.txt','16.txt','17.txt','18.txt','19.txt','20.txt','21.txt','22.txt','23.txt','24.txt','25.txt','26.txt','27.txt','28.txt','29.txt','30.txt'
+            ];
+
+            for (const filename of productFiles) {
+                try {
+                    const response = await fetch(`products/${filename}`);
+                    const text = await response.text();
+                    const lines = text.split(/\r?\n/).map(line => line.trim());
+                    
+                    if (lines.length >= 5) {
+                        const name = lines[0];
+                        const tiktokPrice = parseFloat(lines[1]);
+                        const actualCost = parseFloat(lines[2]);
+                        const category = lines[3].toLowerCase();
+                        const link = lines[4];
+                        const image = lines[5] || '';
+                        
+                        if (name && !isNaN(tiktokPrice) && !isNaN(actualCost) && category && link) {
+                            products.push({
+                                name,
+                                tiktokPrice,
+                                actualCost,
+                                category,
+                                link,
+                                image
+                            });
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Error loading ${filename}:`, err);
+                }
+            }
+
+            document.getElementById('totalProducts').textContent = products.length;
+            renderProducts();
+        }
+
+        function calculateMarkup(tiktokPrice, actualCost) {
+            return Math.round(((tiktokPrice - actualCost) / actualCost) * 100);
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const filtered = products.filter(p => {
+                const matchesCategory = currentFilter === 'all' || p.category === currentFilter;
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesMinPrice = minPrice === null || p.actualCost >= minPrice;
+                const matchesMaxPrice = maxPrice === null || p.actualCost <= maxPrice;
+                return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">No products found</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const markup = calculateMarkup(p.tiktokPrice, p.actualCost);
+                const imageHtml = p.image ? 
+                    `<img src="${p.image}" class="product-image" alt="${p.name}">` : 
+                    `<div class="product-image"></div>`;
+                
+                return `
+                    <div class="product-card" onclick="window.open('${p.link}', '_blank')">
+                        ${imageHtml}
+                        <div class="product-info">
+                            <span class="category-badge">${p.category}</span>
+                            <h3 class="product-title">${p.name}</h3>
+                            <div class="product-details"><strong>Cost:</strong> $${p.actualCost.toFixed(2)}</div>
+                            <div class="product-details"><strong>Profit:</strong> $${(p.tiktokPrice - p.actualCost).toFixed(2)}</div>
+                            <div class="product-meta">
+                                <span class="product-price">$${p.tiktokPrice.toFixed(2)}</span>
+                                <span class="product-markup">+${markup}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
